@@ -1,0 +1,20 @@
+body{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.cell{
+	width: 64px;
+	height: 64px;
+	position: absolute;
+} 
+
+.type_9{
+	background: url("C:/Users/maxime/Desktop/javascript game/sprites.atlas/iso_3d_ground.png");
+}
+
+#mapContainerId{
+	position: absolute;
+}
