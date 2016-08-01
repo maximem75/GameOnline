@@ -18,3 +18,10 @@ body{
 #mapContainerId{
 	position: absolute;
 }
+
+#perso{
+	width: 64px;
+	height: 64px;
+	position: absolute;
+	background: url("img/cowboy.png");
+}

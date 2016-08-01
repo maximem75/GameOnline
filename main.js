@@ -22,7 +22,9 @@ var map = [
 	[9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9],
 	[9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9],
 	[9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9]
-]
+];
+
+var $perso;
 
 var mapObject = {
 	height : 64,
@@ -31,25 +33,30 @@ var mapObject = {
 	dWidth : 32,
 	perso : {
 		x : 0,
-		y : 0
+		y : 0,
+		image : new Image(),
+		path : "img/cowboy.png",
+		height : 1280/10 ,
+		width : 1792/14,
+		direction : "down",
+		idAction : 0		
 	},
-	init : function(){		
+	init : function(){	
 		for(var y = 0 ; y < map.length ; y++){
 			for(var x = 0; x < map[y].length; x++){		
 				if(map[y][x] == 8){
 					mapObject.perso.x = x;
 					mapObject.perso.y = y;
-					$("#mapContainerId").append("<div class='cell type_"+map[y][x]+"' style='background-color:red; top:"+ (y*mapObject.height) +"px; left:"+ (x*mapObject.width) +"px; z-index:"+mapObject.findZ(x,y,0)+";'/></div>");
 					map[y][x] = 9;
 				}
 						
 				$("#mapContainerId").append("<div class='cell type_"+map[y][x]+"' id='cell_"+x+"_"+y+"' x='"+x+"' y='"+y+"' style='top:"+ mapObject.findTop(x,y) +"px; left:"+ mapObject.findLeft(x,y) +"px; z-index:"+mapObject.findZ(x,y,0)+";'/></div>");
 				eventBody("cell_"+x+"_"+y);
 			}
-		}
+		}	
 		
-		$("body").append("<div id='perso'></div>");
-		var $perso = $("#perso");
+		$("#mapContainerId").append("<canvas id='perso' style='top:"+ mapObject.findTop(mapObject.perso.x,mapObject.perso.y) +"px; left:"+ mapObject.findLeft(mapObject.perso.x,mapObject.perso.y) +"px; z-index:"+9999999999999+"; width : "+mapObject.perso.width+"px; height : "+mapObject.perso.height+"px;'/></canvas>");
+		$perso = $("#perso");
 	},
 	findTop : function(x,y){	
 		switch(map[y][x]){				
@@ -85,7 +92,7 @@ var mapObject = {
 			return false;
 		}
 	},
-	/*aStar : {
+	aStar : {
 		complete: function(x,y,done,note,last){
 			this.mapA['p'+x+'_'+y] = {
 				x:x,
@@ -94,6 +101,7 @@ var mapObject = {
 				note:note,
 				last:last,
 				distance:this.distance(x,y)
+			}
 		},
 		findPath : function(dx,dy,fx,fy){
 			this.dx = dx;
@@ -134,7 +142,7 @@ var mapObject = {
 				var tabCell = [];
 				while(m!='p'+this.dx+'_'+this.dy){
 					tabCell.push({x:this.mapA[m].x,y:this.mapA[m].y});
-					m=this.mapA[m].prec;
+					m=this.mapA[m].last;
 				}
 				return tabCell;
 			} else {
@@ -176,10 +184,10 @@ var mapObject = {
 			return Math.sqrt(Math.pow(this.fx-x,2)+Math.pow(this.fy-y,2));
 		}
 
-	}*/
+	}
 }
 
-
+var context = $perso.getContext("2d")
 
 //------------ Fonctions ------------//		
 $(document).ready(function(){   
@@ -193,13 +201,33 @@ function eventBody(id){
 		var tx = Math.floor(mx/mapObject.width);
 		var ty = Math.floor(my/mapObject.height);
 		if(mapObject.checkAvailableCell(tx,ty)){
-			console.log(astar.search(map, map[mapObject.perso.y][mapObject.perso.x], getElemFromGrid($(this))));
-			//mapObject.aStar.findPath(mapObject.perso.x, mapObject.perso.y, tx, ty);
+			console.log(mapObject.aStar.findPath(mapObject.perso.x, mapObject.perso.y, tx, ty));
+			return mapObject.aStar.findPath(mapObject.perso.x, mapObject.perso.y, tx, ty);
 		}
 	});
 }
 
 function getElemFromGrid($cell){
-	console.log($cell);
-	 return map[parseInt($cell.attr("y"))][parseInt($cell.attr("x"))];
+	 return $("#cell_"+parseInt($cell.attr("x"))+"_"+parseInt($cell.attr("y")));
+}
+
+function getAnimation(){
+	switch(mapObject.perso.direction){
+		case "down":
+			mapObject.perso.idAction += 1;
+			var y = 9;
+			var x = mapObject.perso.idAction;
+			context.drawImage(mapObject.perso.path, x*64, y*64, 64, 64, )
+		break;
+		case "right":
+
+		break;
+		case "top":
+
+		break;
+		case "left":
+
+		break;
+
+	}
 }
